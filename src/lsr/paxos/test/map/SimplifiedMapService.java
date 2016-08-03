@@ -1,17 +1,12 @@
 package lsr.paxos.test.map;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-
 import lsr.service.SimplifiedService;
 
+import java.io.*;
+import java.util.HashMap;
+
 public class SimplifiedMapService extends SimplifiedService {
-    private HashMap<Long, Long> map = new HashMap<Long, Long>();
+    private HashMap<Long, String> map = new HashMap<>();
 
     protected byte[] execute(byte[] value) {
         MapServiceCommand command;
@@ -21,9 +16,9 @@ public class SimplifiedMapService extends SimplifiedService {
             throw new RuntimeException(e);
         }
 
-        Long x = map.get(command.getKey());
-        if (x == null) {
-            x = Long.valueOf(0);
+        String lastString = map.get(command.getKey());
+        if (lastString == null) {
+            lastString = "";
         }
 
         map.put(command.getKey(), command.getValue());
@@ -31,7 +26,7 @@ public class SimplifiedMapService extends SimplifiedService {
         ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(byteArrayOutput);
         try {
-            dataOutput.writeLong(x);
+            dataOutput.writeUTF(lastString);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -58,7 +53,7 @@ public class SimplifiedMapService extends SimplifiedService {
         ObjectInputStream objectInputStream;
         try {
             objectInputStream = new ObjectInputStream(stream);
-            map = (HashMap<Long, Long>) objectInputStream.readObject();
+            map = (HashMap<Long, String>) objectInputStream.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

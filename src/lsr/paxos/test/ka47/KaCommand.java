@@ -1,47 +1,57 @@
 package lsr.paxos.test.ka47;
 
 
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class KaCommand implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String requestType;
-    private final String message;
+    private final String value;
+    private final char key;
 
 
-    public KaCommand(String requestType, String message) {
-        this.requestType = requestType;
-        this.message = message;
+//    public KaCommand(String value) {
+//        this.value = value;
+//    }
+
+    public KaCommand(char key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
     public KaCommand(byte[] bytes) throws IOException {
-//        DataInputStream dataInput = new DataInputStream(new ByteArrayInputStream(bytes));
-//        String packet = new String(dataInput.readFully(,"UTF-8");
-        String [] packet = new String(bytes, "UTF-8").split(" ",2);
-
-//        String packet = dataInput.readChar();
-        this.requestType = packet [0];
-        this.message = packet [1];
+        String msg = new BASE64Encoder().encode(bytes);
+        key = msg.charAt(0);
+        value = msg.substring(1,msg.length());
+        System.out.println("value :"+value);
+        System.out.println("mesg :"+msg);
     }
 
     public byte[] toByteArray() throws UnsupportedEncodingException {
-//        byte[] packet = (requestType+" "+message).getBytes("UTF-8");
-        ByteBuffer buffer = ByteBuffer.allocate(100); //to be adjusted
-        System.out.println("allocate : ");
-        buffer.put((requestType+" "+message).getBytes("UTF-8"));
+        System.out.println("allocate  ");
+        ByteBuffer buffer = null;
+        try {
+            buffer = new BASE64Decoder().decodeBufferToByteBuffer(String.format("%c%s",key,value));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return buffer.array();
     }
 
-
-    public String getRequestType() {
-        return requestType;
+    public char getKey() {
+        return key;
     }
 
-    public String getMessage() {
-        return message;
+    public String getValue() {
+        return value;
     }
+
+
    public String toString() {
-        return String.format("[requestType=%s, message=%s]", requestType, message);
+        return String.format("key=%c, value=%s]",key, value);
     }
 }

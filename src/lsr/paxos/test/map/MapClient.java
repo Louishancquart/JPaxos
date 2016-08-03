@@ -1,12 +1,14 @@
 package lsr.paxos.test.map;
 
+import lsr.paxos.client.Client;
+import lsr.paxos.client.ReplicationException;
+import sun.misc.BASE64Encoder;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
-
-import lsr.paxos.client.Client;
-import lsr.paxos.client.ReplicationException;
+import java.util.Arrays;
 
 public class MapClient {
     private Client client;
@@ -26,7 +28,6 @@ public class MapClient {
             }
 
             String[] args = line.trim().split(" ");
-
             if (args[0].equals("bye")) {
                 System.exit(0);
             }
@@ -37,13 +38,15 @@ public class MapClient {
             }
 
             Long key = Long.parseLong(args[0]);
-            Long value = Long.parseLong(args[1]);
+            String value = args[1];
+            System.out.println(String.format("Commandline:\t\nkey :%d \t\nvalue: %s",key, value));
 
             MapServiceCommand command = new MapServiceCommand(key, value);
             byte[] response = client.execute(command.toByteArray());
-            ByteBuffer buffer = ByteBuffer.wrap(response);
-            Long previousValue = buffer.getLong();
-            System.out.println(String.format("Previous value for %d was %d", key, previousValue));
+//            ByteBuffer buffer = ByteBuffer.wrap(response);
+//            key = buffer.getLong();
+
+            System.out.println(String.format("Previous value for %d was %s", key, new String(Arrays.copyOfRange(response,2,response.length),"UTF-8")));// previousValue.toString()));
         }
     }
 

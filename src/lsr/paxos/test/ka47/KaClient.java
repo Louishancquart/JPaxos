@@ -5,9 +5,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.util.Arrays;
 
 import lsr.paxos.client.Client;
 import lsr.paxos.client.ReplicationException;
+import lsr.paxos.test.map.MapServiceCommand;
 
 public class KaClient {
     private Client client;
@@ -19,8 +22,7 @@ public class KaClient {
     }
 
     private static void instructions() {
-        System.out.println("Provide key-value pair: integer String");
-        System.out.println("<key> <value>");
+        System.out.println("Provide a pair of key-value <char> <String>");
     }
 
     public static void main(String[] args) throws IOException, ReplicationException {
@@ -43,39 +45,34 @@ public class KaClient {
                 break;
             }
 
-            String[] args = line.trim().split(" ");
+           String[] args = line.trim().split(" ",1);
 
-            if (args[0].equals("bye")) {
+            if (args.length <1) {
                 System.exit(0);
             }
 
-            if (args.length != 2) {
+            if (args.length <2) {
                 instructions();
-                continue;
             }
 
-//            Long key = Long.parseLong(args[0]);
-//            Long value = Long.parseLong(args[1]);
-//
-//            KaCommand command = new KaCommand(key, value);
-//            byte[] response = client.execute(command.toByteArray());
-//            ByteBuffer buffer = ByteBuffer.wrap(response);
-//            Long previousValue = buffer.getLong();
-//            System.out.println(String.format("Previous value for %d was %d", key, previousValue));
-
-            String requestType = args[0];
-            String message = args[1];
-            System.out.println(" requestType: "+requestType + " message: "+message);
+//            if (args[0].equals("bye")) {
+//                System.exit(0);
+//            }
 
 
-            /** Prepairing request **/
-            KaCommand command = new KaCommand(requestType, message);
+            char key = args[0].charAt(0);
+            String value = args[1];
+            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value));
 
-            /** Executing the request **/
+
+//            String value = line;
+//            System.out.println(String.format("value: %s", value));
+
+            KaCommand command = new KaCommand(key,value);
             byte[] response = client.execute(command.toByteArray());
-            ByteBuffer buffer = ByteBuffer.wrap(response);
-            String answer = buffer.toString();
-            System.out.println("answer: "+answer);
+
+            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+
         }
     }
 

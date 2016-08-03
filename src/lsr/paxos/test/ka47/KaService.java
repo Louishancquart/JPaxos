@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 public class KaService extends SimplifiedService {
     // Map to be replicated
-//    private HashMap<Long, Long> map = new HashMap<Long, Long>();
-    String transmission = new String("");
+    private HashMap<Character, String> map = new HashMap<>();
+//    private String com = "";
 
     /** Processes client request and returns the reply for client **/
     protected byte[] execute(byte[] value) {
@@ -25,19 +25,28 @@ public class KaService extends SimplifiedService {
             return null;
         }
 
-        // We do the work
+//         We do the work
 //        Long x = map.get(command.getKey());
 //        if (x == null) {
 //            x = Long.valueOf(0);
 //        }
 //        map.put(command.getKey(), command.getValue());
+        String lastString = map.get(command.getKey());
+        if (lastString == null) {
+            lastString = "Key not found";
+        }
 
+        map.put(command.getKey(), command.getValue());
+
+
+//        map.put(command.getKey(), command.getValue());
+//        map = command.getValue();
 
         // We serialise the message back
         ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
         DataOutputStream dataOutput = new DataOutputStream(byteArrayOutput);
         try {
-            dataOutput.writeUTF("ok");
+            dataOutput.writeUTF(lastString);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -50,7 +59,7 @@ public class KaService extends SimplifiedService {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream);
-            objectOutputStream.writeObject(transmission);
+            objectOutputStream.writeObject(map);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -67,10 +76,8 @@ public class KaService extends SimplifiedService {
         ObjectInputStream objectInputStream;
         try {
             objectInputStream = new ObjectInputStream(stream);
-            transmission = (String) objectInputStream.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            map = (HashMap<Character, String>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
