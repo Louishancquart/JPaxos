@@ -6,11 +6,12 @@ import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class KaCommand implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String value;
+//    private final String value;
+    private final ArrayList<String> value;
     private final char key;
 
 
@@ -18,10 +19,6 @@ public class KaCommand implements Serializable {
 //        this.value = value;
 //    }
 
-    public KaCommand(char key, String value) {
-        this.key = key;
-        this.value = value;
-    }
 
     public KaCommand(byte[] bytes) throws IOException {
         String msg = new BASE64Encoder().encode(bytes);
@@ -29,6 +26,11 @@ public class KaCommand implements Serializable {
         value = msg.substring(1,msg.length());
         System.out.println("value :"+value);
         System.out.println("mesg :"+msg);
+    }
+
+    public KaCommand(char key, ArrayList<String> value) {
+        this.key = key;
+        this.value = value;
     }
 
     public byte[] toByteArray() throws UnsupportedEncodingException {

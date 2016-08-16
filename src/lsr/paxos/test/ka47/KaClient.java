@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import lsr.paxos.client.Client;
 import lsr.paxos.client.ReplicationException;
@@ -39,29 +40,24 @@ public class KaClient {
         client = new Client();
         client.connect();
 
-//        while (true) {
-//            tm.updateChanges();
-//
-//            //send deleted downloads
-//            char key = 'a';
-//
-//            String value = args[1];
-//            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value));
-//
-//
-////            String value = line;
-////            System.out.println(String.format("value: %s", value));
-//
-//            KaCommand command = new KaCommand(key,value);
-//            byte[] response = client.execute(command.toByteArray());
-//
-//            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
-//
-//            //send added downloads
-//            //send helping downloads
-//
-//
-//        }
+        while (true) {
+            tm.updateChanges();
+
+            //send deleted downloads
+            char key = 'a';
+            ArrayList<String> value = tm.deletedDownloads();
+            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
+
+            KaCommand command = new KaCommand(key,value);
+            byte[] response = client.execute(command.toByteArray());
+
+            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+
+            //send added downloads
+            //send helping downloads
+
+
+        }
     }
 
     /**
