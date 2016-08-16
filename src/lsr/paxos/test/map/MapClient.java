@@ -2,12 +2,10 @@ package lsr.paxos.test.map;
 
 import lsr.paxos.client.Client;
 import lsr.paxos.client.ReplicationException;
-import sun.misc.BASE64Encoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class MapClient {

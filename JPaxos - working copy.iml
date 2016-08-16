@@ -77,5 +77,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="ttorrent-core-1.6-SNAPSHOT" level="project" />
   </component>
 </module>

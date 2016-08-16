@@ -31,9 +31,9 @@ public class KaService extends SimplifiedService {
 //            x = Long.valueOf(0);
 //        }
 //        map.put(command.getKey(), command.getValue());
-        String lastString = map.get(command.getKey());
+        String lastString = map.get(command.getKey()).toString();
         if (lastString == null) {
-            lastString = "Key not found";
+            lastString = "Key not found\n";
         }
 
         map.put(command.getKey(), command.getValue());

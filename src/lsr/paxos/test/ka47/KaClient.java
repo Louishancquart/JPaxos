@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import lsr.paxos.client.Client;
+import lsr.paxos.client.Client AS toto;
 import lsr.paxos.client.ReplicationException;
+
+import static java.lang.Thread.sleep;
 
 public class KaClient {
     private static KaTorrentManager tm;
@@ -24,17 +26,16 @@ public class KaClient {
         System.out.println("Provide a pair of key-value <char> <String>");
     }
 
-    public static void main(String[] args) throws IOException, ReplicationException {
+    public static void main(String[] args) throws IOException, ReplicationException, InterruptedException {
         instructions();
         KaClient client = new KaClient();
         client.run();
     }
 
-    public void run() throws IOException, ReplicationException {
+    public void run() throws IOException, ReplicationException, InterruptedException {
         //initialize the torrent manager
         tm = new KaTorrentManager(new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/torrents"),
                 new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/downloads"));
-
 
         //connect to the client
         client = new Client();
@@ -44,19 +45,40 @@ public class KaClient {
             tm.updateChanges();
 
             //send deleted downloads
-            char key = 'a';
-            ArrayList<String> value = tm.deletedDownloads();
-            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
+            char key = 'd';
+            ArrayList<String> value = tm.getDeletedDownloads();
+            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key,value.toString()));
 
-            KaCommand command = new KaCommand(key,value);
+            //here insert bencoded version of value
+            KaCommand command = new KaCommand(key,value.toString());
             byte[] response = client.execute(command.toByteArray());
 
             System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
 
             //send added downloads
+            key = 'a';
+            value = tm.getAddedDownloads();
+            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
+
+            //here insert bencoded version of value
+            command = new KaCommand(key,value.toString());
+            response = client.execute(command.toByteArray());
+
+            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+
             //send helping downloads
+            key = 'h';
+//            value = tm.deletedDownloads();
+            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
 
+            //here insert bencoded version of value
+            command = new KaCommand(key,value.toString());
+            response = client.execute(command.toByteArray());
 
+            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+
+            //sleep
+            Thread.sleep(5000);
         }
     }
 

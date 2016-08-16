@@ -1,9 +1,6 @@
 package lsr.paxos.test.map;
 
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -26,7 +23,7 @@ public class MapServiceCommand implements Serializable {
 //        value = dataInput.readLine();
 //        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 //        value = new String( .encode( bais ));
-        value = new BASE64Encoder().encode(bytes);
+        value ="";// new BASE64Encoder().encode(bytes);
 //        value = new String(bytes,"UTF-8");
         System.out.println("value :"+value);
     }
@@ -42,11 +39,11 @@ public class MapServiceCommand implements Serializable {
     public byte[] toByteArray() {
         System.out.println("allocate  ");
         ByteBuffer buffer = null;
-        try {
-            buffer = new BASE64Decoder().decodeBufferToByteBuffer(value);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //buffer = new BASE64Decoder().decodeBufferToByteBuffer(value);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 //        buffer.put(bytes.getBytes());
         return buffer.array();
     }
