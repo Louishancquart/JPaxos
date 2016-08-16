@@ -2,17 +2,15 @@ package lsr.paxos.test.ka47;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.util.Arrays;
 
 import lsr.paxos.client.Client;
 import lsr.paxos.client.ReplicationException;
-import lsr.paxos.test.map.MapServiceCommand;
 
 public class KaClient {
+    private static KaTorrentManager tm;
     private Client client;
     /**
      * indicate the sate of the Client ( to the Server )
@@ -32,48 +30,38 @@ public class KaClient {
     }
 
     public void run() throws IOException, ReplicationException {
+        //initialize the torrent manager
+        tm = new KaTorrentManager(new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/torrents"),
+                new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/downloads"));
+
+
+        //connect to the client
         client = new Client();
         client.connect();
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            String line;
-
-            line = reader.readLine();
-
-            if (line == null) {
-                break;
-            }
-
-           String[] args = line.trim().split(" ",1);
-
-            if (args.length <1) {
-                System.exit(0);
-            }
-
-            if (args.length <2) {
-                instructions();
-            }
-
-//            if (args[0].equals("bye")) {
-//                System.exit(0);
-//            }
-
-
-            char key = args[0].charAt(0);
-            String value = args[1];
-            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value));
-
-
-//            String value = line;
-//            System.out.println(String.format("value: %s", value));
-
-            KaCommand command = new KaCommand(key,value);
-            byte[] response = client.execute(command.toByteArray());
-
-            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
-
-        }
+//        while (true) {
+//            tm.updateChanges();
+//
+//            //send deleted downloads
+//            char key = 'a';
+//
+//            String value = args[1];
+//            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value));
+//
+//
+////            String value = line;
+////            System.out.println(String.format("value: %s", value));
+//
+//            KaCommand command = new KaCommand(key,value);
+//            byte[] response = client.execute(command.toByteArray());
+//
+//            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+//
+//            //send added downloads
+//            //send helping downloads
+//
+//
+//        }
     }
 
     /**
