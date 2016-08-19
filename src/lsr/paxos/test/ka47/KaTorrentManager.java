@@ -1,7 +1,11 @@
 package lsr.paxos.test.ka47;
 
+import com.turn.ttorrent.bcodec.BEValue;
+import com.turn.ttorrent.bcodec.BEncoder;
+
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +44,7 @@ public class KaTorrentManager {
      * this m
      */
     public void updateLastHostedDownloads(){
-        setLastHostedDownloads(getHostedDownloads());
+        setLastHostedDownloads(hostedDownloads());
     }
 
     public KaTorrentManager(File torrentDir, File downloadDir) {
@@ -51,17 +55,40 @@ public class KaTorrentManager {
         this.downloadsList = new ArrayList<>();
     }
 
-    public void updateChanges(){
+    /**
+     * store  added / deleted Downloads
+     * then update the current list of HostedDownloads
+     */
+    private void updateChanges(){
         this.addedDownloads = addedDownloads();
         this.deletedDownloads = deletedDownloads();
         updateLastHostedDownloads();
     }
 
     /**
+     *
+     * @return added / deleted / hosted list in a single Array
+     */
+    public ArrayList<String> downloadsStateToArrray(){
+        updateChanges();
+
+        ArrayList<String> returnedList = new ArrayList<>();
+
+        returnedList.add("added");
+        returnedList.addAll(this.addedDownloads);
+        returnedList.add("deletedList");
+        returnedList.addAll(deletedDownloads);
+        returnedList.add("hostedList");
+        returnedList.addAll(this.lastHostedDownloads);
+
+        return returnedList;
+    }
+
+    /**
      * list Configured Download and .torrent Directories to identify matches
      * @return list of hosted Downloads copmpared with what contains the .torrent file folder configured
      */
-    public ArrayList<String> getHostedDownloads() {
+    public ArrayList<String> hostedDownloads() {
         // list torrentDir
         torrentsList = listDir(this.torrentsDir, ".torrent");
 
@@ -77,7 +104,7 @@ public class KaTorrentManager {
     public ArrayList<String> addedDownloads(){
         // for 1 st launch
         if( this.lastHostedDownloads.isEmpty()){
-            return getHostedDownloads();
+            return hostedDownloads();
         }
 
         //we get the lastHostedDownloads - deletedDownloads
@@ -85,7 +112,7 @@ public class KaTorrentManager {
         keptDownloads.removeAll(deletedDownloads());
 
         //we do downloadsList - keptDownloads
-        ArrayList<String> addedDownloadsList = getHostedDownloads();
+        ArrayList<String> addedDownloadsList = hostedDownloads();
         addedDownloadsList.removeAll(keptDownloads);
 
         return addedDownloadsList;
@@ -108,7 +135,7 @@ public class KaTorrentManager {
         }
 
         deletedDownloads = getLastHostedDownloads();
-        deletedDownloads.removeAll(getHostedDownloads());
+        deletedDownloads.removeAll(hostedDownloads());
         return deletedDownloads;
     }
 
@@ -169,4 +196,6 @@ public class KaTorrentManager {
         }
             return fileNameList;
         }
-    }
+
+
+}

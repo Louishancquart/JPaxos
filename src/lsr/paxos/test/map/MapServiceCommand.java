@@ -1,6 +1,9 @@
 package lsr.paxos.test.map;
 
 
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -39,11 +42,11 @@ public class MapServiceCommand implements Serializable {
     public byte[] toByteArray() {
         System.out.println("allocate  ");
         ByteBuffer buffer = null;
-//        try {
-//            //buffer = new BASE64Decoder().decodeBufferToByteBuffer(value);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            buffer = new BASE64Decoder().decodeBufferToByteBuffer(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        buffer.put(bytes.getBytes());
         return buffer.array();
     }

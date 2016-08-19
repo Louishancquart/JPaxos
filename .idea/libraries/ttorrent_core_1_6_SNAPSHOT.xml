@@ -2,8 +2,10 @@
   <library name="ttorrent-core-1.6-SNAPSHOT">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/ttorrent-core-1.6-SNAPSHOT.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
   </library>
 </component>

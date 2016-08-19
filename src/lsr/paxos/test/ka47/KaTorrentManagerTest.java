@@ -21,7 +21,7 @@ public class KaTorrentManagerTest {
         tm = new KaTorrentManager(new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/torrents"),
                 new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/downloads"));
 
-        tm.setLastHostedDownloads(tm.getHostedDownloads());
+        tm.setLastHostedDownloads(tm.hostedDownloads());
 
         verifyedList = new ArrayList<String>(Arrays.asList("Pirate Informatique N°30 - Aout-Octobre 2016.pdf",
                 "Votre santé par les jus frais de légumes et de fruits - Norman Walker.pdf",
@@ -42,8 +42,8 @@ public class KaTorrentManagerTest {
         assertEquals(new ArrayList<>(),tm.deletedDownloads());
 
         //normal test
-        tm.setLastHostedDownloads(tm.getHostedDownloads());
-        ArrayList<String> tmpList = tm.getHostedDownloads();
+        tm.setLastHostedDownloads(tm.hostedDownloads());
+        ArrayList<String> tmpList = tm.hostedDownloads();
         tmpList.add(0,"new DL");
         tm.setLastHostedDownloads(tmpList);
 
@@ -54,8 +54,8 @@ public class KaTorrentManagerTest {
     @Test
     public void getAddedDownloadsTest() throws Exception {
          //emptytest
-        tm.setLastHostedDownloads(tm.getHostedDownloads());
-        ArrayList<String> tmpList = tm.getHostedDownloads();
+        tm.setLastHostedDownloads(tm.hostedDownloads());
+        ArrayList<String> tmpList = tm.hostedDownloads();
         tm.setLastHostedDownloads(new ArrayList<String>());
 
         assertEquals(tmpList,tm.addedDownloads());

@@ -77,6 +77,14 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="ttorrent-core-1.6-SNAPSHOT" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/ttorrent-core-1.6-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

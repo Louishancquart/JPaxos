@@ -1,26 +1,15 @@
 package lsr.paxos.test.ka47;
 
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import lsr.paxos.client.Client AS toto;
+import com.turn.ttorrent.client.Client;
 import lsr.paxos.client.ReplicationException;
 
-import static java.lang.Thread.sleep;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class KaClient {
     private static KaTorrentManager tm;
-    private Client client;
-    /**
-     * indicate the sate of the Client ( to the Server )
-     */
-    private enum State {
-        UP, DOWN
-    }
+    private PaxosClient paxosClient;
 
     private static void instructions() {
         System.out.println("Provide a pair of key-value <char> <String>");
@@ -38,44 +27,19 @@ public class KaClient {
                 new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/downloads"));
 
         //connect to the client
-        client = new Client();
-        client.connect();
+        paxosClient = new PaxosClient();
+        paxosClient.connect();
 
         while (true) {
-            tm.updateChanges();
 
-            //send deleted downloads
-            char key = 'd';
-            ArrayList<String> value = tm.getDeletedDownloads();
-            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key,value.toString()));
+            //send data downloads
+            ArrayList<String> clientList = tm.downloadsStateToArrray();
 
-            //here insert bencoded version of value
-            KaCommand command = new KaCommand(key,value.toString());
-            byte[] response = client.execute(command.toByteArray());
+            System.out.println(String.format("DATA SENT \n"+clientList.toString()));
+            KaCommand command = new KaCommand(clientList);
+            byte[] response = paxosClient.execute(command.toByteArray());
 
-            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
-
-            //send added downloads
-            key = 'a';
-            value = tm.getAddedDownloads();
-            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
-
-            //here insert bencoded version of value
-            command = new KaCommand(key,value.toString());
-            response = client.execute(command.toByteArray());
-
-            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
-
-            //send helping downloads
-            key = 'h';
-//            value = tm.deletedDownloads();
-            System.out.println(String.format("Commandline:\t\nkey :%c \t\nvalue: %s",key, value.toString()));
-
-            //here insert bencoded version of value
-            command = new KaCommand(key,value.toString());
-            response = client.execute(command.toByteArray());
-
-            System.out.println(String.format("Previous value : %s", new String(response,"UTF-8")));
+            System.out.println(String.format("Previous value :\n %s", new String(response, "UTF-8")));
 
             //sleep
             Thread.sleep(5000);
@@ -110,7 +74,21 @@ public class KaClient {
 
     }
 
+    /**
+     * indicate the sate of the Client ( to the Server )
+     */
+    private enum State {
+        UP, DOWN
+    }
 
+    /**
+     * private class to avoid className conflict with class Client :
+     *  lsr.paxos.client.Client
+     */
+    private class PaxosClient extends lsr.paxos.client.Client {
+        public PaxosClient() throws IOException {
+        }
+    }
 
 
 }
