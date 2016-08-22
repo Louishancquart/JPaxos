@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
  * 
  * ServiceProxy proxy = new ServiceProxy(service, responsesCatche, dispatcher);
  * for(ConsensusInstance instance : instances) {
- *   for(Request request : batcher.unpack(instance.getValue()) {
+ *   for(Request request : batcher.unpack(instance.getList()) {
  *     byte[] result = proxy.execute(request);
  *     responsesCache.put(instance.getId(), new Reply(request.getRequestId(), result));
  *   }

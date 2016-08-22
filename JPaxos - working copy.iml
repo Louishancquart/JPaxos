@@ -46,7 +46,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library name="slf4j-api-1.7.5.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/slf4j-api-1.7.5.jar!/" />
@@ -82,7 +82,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ttorrent-core-1.6-SNAPSHOT.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/ttorrent-core-1.6-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>

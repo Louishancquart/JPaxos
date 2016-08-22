@@ -1,57 +1,43 @@
 package lsr.paxos.test.map;
 
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
 public class MapServiceCommand implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Long key = Long.valueOf(1);
-    private final  String value;
+    private final Long key;
+    private final Long value;
 
-    public MapServiceCommand(Long key, String value) {
+    public MapServiceCommand(Long key, Long value) {
         this.key = key;
         this.value = value;
     }
 
     public MapServiceCommand(byte[] bytes) throws IOException {
-//        DataInputStream dataInput = new InputStream(new ByteArrayInputStream(bytes));
-//        key = dataInput.readLong();
-//        key =(Long) 0
-//        b1;
-//        value = dataInput.readLine();
-//        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-//        value = new String( .encode( bais ));
-        value ="";// new BASE64Encoder().encode(bytes);
-//        value = new String(bytes,"UTF-8");
-        System.out.println("value :"+value);
+        DataInputStream dataInput = new DataInputStream(new ByteArrayInputStream(bytes));
+        key = dataInput.readLong();
+        value = dataInput.readLong();
     }
 
     public Long getKey() {
         return key;
     }
 
-    public String getValue() {
+    public Long getValue() {
         return value;
     }
 
     public byte[] toByteArray() {
-        System.out.println("allocate  ");
-        ByteBuffer buffer = null;
-        try {
-            buffer = new BASE64Decoder().decodeBufferToByteBuffer(value);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        buffer.put(bytes.getBytes());
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.putLong(key);
+        buffer.putLong(value);
         return buffer.array();
     }
 
     public String toString() {
-        return String.format("[key=%d, value=%s]", key, value);
+        return String.format("[key=%d, value=%d]", key, value);
     }
 }
