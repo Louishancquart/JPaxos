@@ -39,7 +39,6 @@ public class KaService extends SimplifiedService {
         }
 
 
-//        String lastString = command.getList().toString();
         ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
         ArrayList<?> objectSent = new ArrayList<>();
 //      We do the work

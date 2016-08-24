@@ -79,7 +79,7 @@ public class KaTorrentManager {
     /**
      * list Configured Download and .torrent Directories to identify matches
      *
-     * @return list of hosted Downloads copmpared with what contains the .torrent file folder configured
+     * @return list of hosted Downloads compared with what contains the .torrent file folder configured
      */
     public ArrayList<String> hostedDownloads() {
         // list torrentDir
@@ -94,6 +94,10 @@ public class KaTorrentManager {
         return hostedTorrents;
     }
 
+    /**
+     *
+     * @return added downloads filenames from the last check
+     */
     public ArrayList<String> addedDownloads() {
         // for 1 st launch
         if (this.lastHostedDownloads.isEmpty()) {
@@ -189,7 +193,11 @@ public class KaTorrentManager {
         return fileNameList;
     }
 
-
+    /**
+     * Simply returns a list of .torrents files matching matching a list of filename containing the missing torrents on the server
+     * @param list of files names sent by the server containing the filenames it does't have the corresponding .torrent file
+     * @return a file list containing the .torrent files not present on the server
+     */
     public ArrayList<File> getMissingTorrentsFiles(ArrayList<String> list){
         File[] paths = listDir(torrentsDir,".torrent");
        ArrayList<File> missingTorrents = new ArrayList<>();

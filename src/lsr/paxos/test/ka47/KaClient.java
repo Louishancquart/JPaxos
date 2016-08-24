@@ -1,5 +1,6 @@
 package lsr.paxos.test.ka47;
 
+import lsr.paxos.client.Client;
 import lsr.paxos.client.ReplicationException;
 
 import java.io.ByteArrayInputStream;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class KaClient {
 
     private static void instructions() {
-        System.out.println("Provide a pair of key-value <char> <String>");
+        System.out.println("The Download helper is running");
     }
 
     public static void main(String[] args) throws IOException, ReplicationException, InterruptedException, ClassNotFoundException, NoSuchAlgorithmException {
@@ -27,7 +28,7 @@ public class KaClient {
                 new File("/home/m/documents/put/s3/MTh/Paxos/JPaxos/src/lsr/testResources/downloads"));
 
         //connect to the client
-        PaxosClient paxosClient = new PaxosClient();
+        Client paxosClient = new Client();
         paxosClient.connect();
 
         while (true) {
@@ -72,49 +73,7 @@ public class KaClient {
         }
     }
 
-    /**
-     * notify the server that the client is up
-     */
-    public void notifyServer(State state, String message) {
 
-    }
-
-    /**
-     * scan torrent folder in order to send report to Server about content on this client
-     */
-    public void scanTorrentFolder() {
-
-    }
-
-    /**
-     * report torrents hosted
-     */
-    public void reportTorrentsHosted() {
-
-    }
-
-    /**
-     * things to do before shutting dowm the client App
-     */
-    public void tearDown() {
-
-    }
-
-    /**
-     * indicate the sate of the Client ( to the Server )
-     */
-    private enum State {
-        UP, DOWN
-    }
-
-    /**
-     * private class to avoid className conflict with class Client :
-     *  lsr.paxos.client.Client
-     */
-    private class PaxosClient extends lsr.paxos.client.Client {
-        public PaxosClient() throws IOException {
-        }
-    }
 
 
 }
